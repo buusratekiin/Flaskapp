@@ -1,0 +1,314 @@
+{% extends "base.html" %}
+{% block title %}Tables{% endblock %}
+{% block content %}
+
+<!-- Begin Page Content -->
+<div class="container-fluid">
+    
+
+    <!-- Page Heading -->
+    <h1 class="h3 mb-2 text-gray-800">Kayıtlar</h1>
+    
+    <!-- DataTales Example -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Kayıtlar Tablosu</h6>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>Alan</th>
+                            <th>Tür</th>
+                            <th>Adı</th>
+                            <th>Mgmt_IP</th>
+                            <th>Mgmt_User</th>
+                            <th>Mgmt_Password</th>
+                            <th>OS_IP</th>
+                            <th>OS_User</th>
+                            <th>OS_Password</th>
+                            <th>İşlemler</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for vmtable in vmtables %}
+                        <tr>
+                            <td>{{ vmtable[1] }}</td> <!-- VmName -->
+                            <td>{{ vmtable[2] }}</td> <!-- VmIp -->
+                            <td>{{ vmtable[3] }}</td> <!-- Açıklama -->
+                            <td>{{ vmtable[4] }}</td> <!-- IpMI -->
+                            <td>{{ vmtable[5] }}</td> <!-- Kullanıcı -->
+                            <td>
+                                <div class="input-group">
+                                    <input type="password" class="form-control password-field" value="{{ vmtable[6] }}" readonly>
+                                    <div class="input-group-append">
+                                        <button class="btn btn-outline-secondary toggle-password" type="button">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </td> 
+                            <td>{{ vmtable[7] }}</td> <!-- Şifre -->
+                            <td>{{ vmtable[8] }}</td> <!-- VmIp -->
+                            <td>
+                                <div class="input-group">
+                                    <input type="password" class="form-control password-field" value="{{ vmtable[9] }}" readonly>
+                                    <div class="input-group-append">
+                                        <button class="btn btn-outline-secondary toggle-password" type="button">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </td>
+                            <td> <!-- Silme ve düzenleme butonlarını içeren tek sütun -->
+                                <div class="btn-group" role="group" aria-label="Record Actions">
+
+                                    <div style= "margin-right: 10px;" class="btn-container"> <button class="btn btn-danger delete-button" data-id="{{ vmtable[0] }}">Delete</button> </div>
+                                    <div class="btn-container"> <button class="btn btn-primary edit-button" data-id="{{ vmtable[0] }}">Edit</button></div>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>
+<!-- /.container-fluid -->
+
+<!-- Satır Düzenleme Formu -->
+<div id="editForm" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Satır Düzenleme Formu</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <input type="hidden" id="editId">
+                <div class="form-group">
+                    <label for="editAlan">Alan:</label>
+                    <select class="form-control" id="editAlan" name="editAlan">
+                        <option value="eDevlet">eDevlet</option>
+                        <option value="eDevlet_FKM">eDevlet_FKM</option>
+                        <option value="Türksat">Türksat</option>
+                        <option value="Türksat_FKM">Türksat_FKM</option>
+                        <option value="Kamu">Kamu</option>
+                        <option value="Kamu_FKM">Kamu_FKM</option>
+                        <option value="Diger1">Diğer</option>
+                    </select>
+                    <input type="text" class="form-control mt-2" id="editOtherAlan" name="editOtherAlan" placeholder="Diğer Alan Adı" style="display:none;">
+                </div>
+                <div class="form-group">
+                    <label for="editTur">Tür:</label>
+                    <select class="form-control" id="editTur" name="editTur">
+                        <option value="Fiziksel">Fiziksel</option>
+                        <option value="Sanal">Sanal</option>
+                        <option value="Storage">Storage</option>
+                        <option value="Load Balancer">Load Balancer</option>
+                        <option value="Diger2">Diğer</option>
+                    </select>
+                    <input type="text" class="form-control mt-2" id="editOtherTur" name="editOtherTur" placeholder="Diğer Tür Adı" style="display:none;">
+                </div>
+                
+                <div class="form-group">
+                    <label for="editAdi">Adı:</label>
+                    <input type="text" class="form-control" id="editAdi">
+                </div>
+                <div class="form-group">
+                    <label for="editMgmtIP">Mgmt IP:</label>
+                    <input type="text" class="form-control" id="editMgmtIP">
+                </div>
+                <div class="form-group">
+                    <label for="editMgmtUser">Mgmt User:</label>
+                    <input type="text" class="form-control" id="editMgmtUser">
+                </div>
+                <div class="form-group">
+                    <label for="editMgmtPass">Mgmt Password:</label>
+                    <input type="text" class="form-control" id="editMgmtPass">
+                </div>
+                <div class="form-group">
+                    <label for="editOsIP">OS IP:</label>
+                    <input type="text" class="form-control" id="editOsIP">
+                </div>
+                <div class="form-group">
+                    <label for="editOsUser">OS User:</label>
+                    <input type="text" class="form-control" id="editOsUser">
+                </div>
+                <div class="form-group">
+                    <label for="editOsPass">OS Password:</label>
+                    <input type="text" class="form-control" id="editOsPass">
+                </div>
+                <div class="form-group">
+                    <label for="editAciklama">Açıklama:</label>
+                    <textarea class="form-control" id="editAciklama" rows="3"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Kapat</button>
+                <button type="button" class="btn btn-primary" id="edit-button">Güncelle</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}
+
+{% block js %}
+    {{ super() }}
+    <!-- Page level plugins -->
+    <script src="{{ url_for('static', filename='vendor/datatables/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='vendor/datatables/dataTables.bootstrap4.min.js') }}"></script>
+
+    <!-- Page level custom scripts -->
+    <script src = "{{ url_for('static', filename='js/demo/datatables-demo.js') }}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('.delete-button').forEach(function(button) {
+                button.addEventListener('click', function() {
+                    var vmId = this.getAttribute('data-id');
+                    if (confirm('Are you sure you want to delete this entry?')) {
+                        fetch(`/delete_vm/${vmId}`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/x-www-form-urlencoded',
+                            },
+                            body: '',
+                        }).then(response => {
+                            if (response.ok) {
+                                window.location.reload();
+                            } else {
+                                alert('Failed to delete the entry.');
+                            }
+                        });
+                    }
+                });
+            });
+
+            // Add event listener for password fields to enable copy on click
+            document.querySelectorAll('.password-field').forEach(function(input) {
+                input.addEventListener('click', function() {
+                    this.type = 'text'; // Show the password text
+                    this.select(); // Select the text
+                    document.execCommand('copy'); // Copy the text to clipboard
+                    this.type = 'password'; // Hide the password text again
+                    alert('Password copied to clipboard');
+                });
+            });
+
+            document.querySelectorAll('.toggle-password').forEach(function(button) {
+                button.addEventListener('click', function() {
+                    var input = this.closest('.input-group').querySelector('.password-field');
+                    if (input.type === 'password') {
+                        input.type = 'text';
+                        this.innerHTML = '<i class="fas fa-eye-slash"></i>';
+                    } else {
+                        input.type = 'password';
+                        this.innerHTML = '<i class="fas fa-eye"></i>';
+                    }
+                });
+            });
+
+            // Düzenleme butonlarına tıklama olayı ekle
+document.querySelectorAll('.edit-button').forEach(function(button) {
+    button.addEventListener('click', function() {
+        var id = this.getAttribute('data-id');
+
+        // AJAX isteği yaparak veritabanından ilgili kaydı al
+        fetch(`/get_vm/${id}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    alert('Error fetching data: ' + data.error);
+                } else {
+                    // Verileri form alanlarına doldur
+                    document.getElementById('editId').value = data.id;                   
+                    document.getElementById('editAdi').value = data.adi;
+                    document.getElementById('editMgmtIP').value = data.mgmtIP;
+                    document.getElementById('editMgmtUser').value = data.mgmtUser;
+                    document.getElementById('editMgmtPass').value = data.mgmtPass;
+                    document.getElementById('editOsIP').value = data.osIP;
+                    document.getElementById('editOsUser').value = data.osUser;
+                    document.getElementById('editOsPass').value = data.osPass;
+                    document.getElementById('editAciklama').value = data.aciklama;
+                    // Alan ve Tür bilgilerini doldur
+                    document.getElementById('editAlan').value = data.alan;
+                    document.getElementById('editTur').value = data.tur;
+                    // Diğer metin kutularını gerektiğinde görünür hale getir
+                    if (data.alan === "Diger1") {
+                        document.getElementById('editOtherAlan').style.display = "block";
+                        document.getElementById('editOtherAlan').value = data.otherAlan;
+                    } else {
+                        document.getElementById('editOtherAlan').style.display = "none";
+                    }
+                    if (data.tur === "Diger2") {
+                        document.getElementById('editOtherTur').style.display = "block";
+                        document.getElementById('editOtherTur').value = data.otherTur;
+                    } else {
+                        document.getElementById('editOtherTur').style.display = "none";
+                    }
+
+                    // Düzenleme formunu aç
+                    $('#editForm').modal('show');
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching data:', error);
+                alert('An error occurred while fetching the data.');
+            });
+    });
+});
+
+
+            // Güncelleme butonuna tıklama olayı ekle
+            document.getElementById('edit-button').addEventListener('click', function() {
+                var id = document.getElementById('editId').value;
+                var alan =document.getElementById('editAlan').value
+                var tur =document.getElementById('editTur').value
+                var adi = document.getElementById('editAdi').value;
+                var mgmtIP = document.getElementById('editMgmtIP').value;
+                var mgmtUser = document.getElementById('editMgmtUser').value;
+                var mgmtPass = document.getElementById('editMgmtPass').value;
+                var osIP = document.getElementById('editOsIP').value;
+                var osUser = document.getElementById('editOsUser').value;
+                var osPass = document.getElementById('editOsPass').value;
+                var aciklama = document.getElementById('editAciklama').value;
+
+                // Sunucuya güncelleme isteği göndermek için fetch veya başka bir yöntem kullanabilirsiniz
+                // Örneğin:
+                fetch(`/update_vm/${id}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ alan:alan,tur:tur, adi: adi, mgmtIP: mgmtIP, mgmtUser: mgmtUser, mgmtPass: mgmtPass, osIP: osIP, osUser: osUser, osPass: osPass, aciklama: aciklama })
+                })
+                .then(response => {
+                    // Yanıtı kontrol et
+                    if (response.ok) {
+                        // Başarılı yanıt alındığında formu kapat
+                        $('#editForm').modal('hide');
+                        // Sayfayı yeniden yükle
+                        window.location.reload();
+                    } else {
+                        // Başarısız yanıt alındığında kullanıcıya uyarı ver
+                        alert('Güncelleme başarısız!');
+                    }
+                })
+                .catch(error => {
+                    console.error('Güncelleme hatası:', error);
+                    alert('Bir hata oluştu, lütfen tekrar deneyin.');
+                });
+            });
+        });
+    </script>
+
+{% endblock %}
+

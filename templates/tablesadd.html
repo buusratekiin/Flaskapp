@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+{% block title %}Yeni Tablo Ekle{% endblock %}
+
+{% block content %}
+{% with msg = get_flashed_messages(with_categories=True) %}
+{% if msg %}
+{% for category, message in msg %}
+<div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+  <strong>{{ message }}</strong>
+  
+</div>
+{% endfor %}
+{% endif %}
+{% endwith %}
+    <!-- Begin Page Content -->
+    <div class="container">
+        <h1>Yeni Kayıt Ekle</h1>
+        <p>Lütfen aşağıdaki bilgileri girerek yeni bir kayıt ekleyin.</p>
+        <form method="post">
+            <div class="form-group">
+                <label for="Alan">Alan</label>
+                <select class="form-control" id="Alan" name="Alan" onchange="toggleOtherInputAlan()" required>
+                    <option value="" disabled selected>Seçiniz</option>
+                    <option value="eDevlet">eDevlet</option>
+                    <option value="eDevlet_FKM">eDevlet_FKM</option>
+                    <option value="Türksat">Türksat</option>
+                    <option value="Türksat_FKM">Türksat_FKM</option>
+                    <option value="Kamu">Kamu</option>
+                    <option value="Kamu_FKM">Kamu_FKM</option>
+                    <option value="Diger1">Diger</option>
+                </select>
+                <input type="text" class="form-control mt-2" id="otheralan" name="otheralan" placeholder="Diğer Alan Adı" style="display:none;">
+            </div>
+            <div class="form-group">
+                <label for="Tur">Tür</label>
+                <select class="form-control" id="Tur" name="Tur" onchange="toggleOtherInputTur()" required>
+                    <option value="" disabled selected>Seçiniz</option>
+                    <option value="Fiziksel">Fiziksel</option>
+                    <option value="Sanal">Sanal</option>
+                    <option value="Storage">Storage</option>
+                    <option value="Load Balancer">Load Balancer</option>
+                    <option value="Diger2">Diger</option>
+                </select>
+                <input type="text" class="form-control mt-2" id="othertur" name="othertur" placeholder="Diğer Tür Adı" style="display:none;">
+        
+            <div class="form-group">
+                <label for="VmName">Adı</label>
+                <input type="text" class="form-control" id="VmName" name="VmName" required>
+            </div>
+            <div class="form-group">
+                <label for="ManagemendIP">Managemend IP</label>
+                <input type="text" class="form-control" id="ManagemendIP" name="ManagemendIP" required>
+            </div>
+            <div class="form-group">
+                <label for="ManagemendUser">Managemend User</label>
+                <input type="text" class="form-control" id="ManagemendUser" name="ManagemendUser" required>
+            </div>
+            <div class="form-group">
+                <label for="ManagemendPass">Managemend Password</label>
+                <input type="password" class="form-control" id="ManagemendPass" name="ManagemendPass" required>
+            </div>
+            <div class="form-group">
+                <label for="OsIp">OS Ip</label>
+                <input type="text" class="form-control" id="OsIp" name="OsIp" required>
+            </div>
+            <div class="form-group">
+                <label for="OsUser">OS User</label>
+                <input type="text" class="form-control" id="OsUser" name="OsUser" required>
+            </div>
+            <div class="form-group">
+                <label for="Ospass">OS Password</label>
+                <input type="password" class="form-control" id="Ospass" name="Ospass" required>
+            </div>
+            <div class="form-group">
+                <label for="Aciklama">Açıklama</label>
+                <textarea class="form-control" id="Aciklama" name="Aciklama" rows="2"></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Tabloyu Ekle</button>
+        </form>
+    </div>
+    <!-- /.container-fluid -->
+    <script>
+        function toggleOtherInputAlan() {
+            var alanSelect = document.getElementById("Alan");
+            var otherInputAlan = document.getElementById("otheralan");
+            if (alanSelect.value === "Diger1") {
+                otherInputAlan.style.display = "block";
+                otherInputAlan.required = true;
+            } else {
+                otherInputAlan.style.display = "none";
+                otherInputAlan.required = false;
+            }
+        }
+
+        function toggleOtherInputTur() {
+            var turSelect = document.getElementById("Tur");
+            var otherInputTur = document.getElementById("othertur");
+            if (turSelect.value === "Diger2") {
+                otherInputTur.style.display = "block";
+                otherInputTur.required = true;
+            } else {
+                otherInputTur.style.display = "none";
+                otherInputTur.required = false;
+            }
+        }
+
+    </script>
+{% endblock %}
